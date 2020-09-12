@@ -1,0 +1,122 @@
+<!-- <h1 *ngIf="curso">Asignar alumnos al curso {{curso.nombre}}</h1> -->
+
+
+
+<mat-card>
+    <mat-card-header *ngIf="curso">
+        <mat-card-title>
+            Alumnos del curso {{curso.nombre}}
+        </mat-card-title>
+    </mat-card-header>
+
+    <hr>
+
+    <mat-card-content>
+
+        <mat-tab-group dynamicHeight [(selectedIndex)]="tabIndex">
+            <!-- 
+            tabIndex
+            indice 1 <mat-tab label="Asignar alumnos">
+            indice 2 <mat-tab label="Alumnos del curso"></mat-tab> 
+            -->
+            
+            <mat-tab label="Asignar alumnos">
+
+
+                <mat-form-field class="mx-3" style="width: 50%;">
+                    <input id="inputAlumnos" matInput placeholder="Buscar alumnos" (keyup)="filtrar($event.target.value)"
+                        autocomplete="off">
+                </mat-form-field>
+
+                <button mat-raised-button class="m-4" (click)="asignar()" [disabled]="!seleccion.hasValue()">
+                    Asignar
+                </button>
+
+                <table mat-table [dataSource]="alumnosAsignar" class="mat-elevation-z8 mx-3"
+                    *ngIf="alumnosAsignar.length > 0" style="width: 60%;">
+
+                    <ng-container matColumnDef="seleccion">
+                        <th mat-header-cell *matHeaderCellDef class="align-middle">
+                            <mat-checkbox (change)="$event? seleccionarDeseleccionarTodos() : null"
+                                [checked]="seleccion.hasValue() && estanTodosSeleccionados()"
+                                [indeterminate]="seleccion.hasValue() && !estanTodosSeleccionados()">
+
+                            </mat-checkbox>
+                        </th>
+                        <td mat-cell *matCellDef="let alumno">
+                            <!-- stopPropagation() detiene la propagacion de este evento para poder manejar el change y ahi manejar si se selecciona o no la fila -->
+                            <mat-checkbox (click)="$event.stopPropagation()"
+                                (change)="$event? seleccion.toggle(alumno): null"
+                                [checked]="seleccion.isSelected(alumno)">
+
+                            </mat-checkbox>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="nombre">
+                        <th mat-header-cell *matHeaderCellDef> Nombre </th>
+                        <td mat-cell *matCellDef="let alumno"> {{alumno.nombre}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="apellido">
+                        <th mat-header-cell *matHeaderCellDef> Apellido </th>
+                        <td mat-cell *matCellDef="let alumno"> {{alumno.apellido}} </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="mostrarColumnas"></tr>
+                    <tr mat-row *matRowDef="let alumno; columns: mostrarColumnas;" (click)="seleccion.toggle(alumno)">
+                    </tr>
+                </table>
+
+            </mat-tab>
+            <mat-tab label="Alumnos del curso">
+
+                <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 m-3"
+                    *ngIf="alumnos.length > 0" style="width: 96%;">
+
+                    <ng-container matColumnDef="id">
+                        <th mat-header-cell *matHeaderCellDef> Id </th>
+                        <td mat-cell *matCellDef="let alumno"> {{alumno.id}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="nombre">
+                        <th mat-header-cell *matHeaderCellDef> Nombre </th>
+                        <td mat-cell *matCellDef="let alumno"> {{alumno.nombre}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="apellido">
+                        <th mat-header-cell *matHeaderCellDef> Apellido </th>
+                        <td mat-cell *matCellDef="let alumno"> {{alumno.apellido}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="email">
+                        <th mat-header-cell *matHeaderCellDef> Email </th>
+                        <td mat-cell *matCellDef="let alumno"> {{alumno.email}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="eliminar">
+                        <th mat-header-cell *matHeaderCellDef> Eliminar </th>
+                        <td mat-cell *matCellDef="let alumno">
+                            <button mat-mini-fab color="warn"
+                            (click)="eliminarAlumno(alumno)">x</button>
+                            <!-- Se recibe en eliminarAlumno(alumno) el alumno iterado por let alumno y el datasource -->
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="mostrarColumnasAlumnos"></tr>
+                    <tr mat-row *matRowDef="let alumno; columns: mostrarColumnasAlumnos;">
+                    </tr>
+                </table>
+
+                <mat-paginator 
+                    [pageSize]="totalPorPagina"
+                    [pageSizeOptions]="pageSizeOptions" 
+                    showFirstLastButtons>
+                 </mat-paginator>
+
+            </mat-tab>
+        </mat-tab-group>
+
+    </mat-card-content>
+
+</mat-card>

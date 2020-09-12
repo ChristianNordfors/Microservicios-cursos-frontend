@@ -1,0 +1,28 @@
+<h1 mat-dialog-title>Curso {{curso.nombre}}</h1>
+<hr>
+<div mat-dialog-content>
+    <p>Examen {{examen.nombre}}</p>
+
+    <!-- hideToggle   Para esconder la flechita del accordion -->
+    <mat-expansion-panel *ngFor="let pregunta of examen.preguntas">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{pregunta.texto}}
+          </mat-panel-title>
+          <mat-panel-description>
+            Verificar la respuesta antes de enviar
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <mat-form-field style="width: 95%;">
+            <textarea matInput (change)="responder(pregunta, $event)"
+            placeholder="Escribir respuesta..." rows="3"></textarea>
+        </mat-form-field>
+      </mat-expansion-panel>
+    
+</div>
+
+<div mat-dialog-actions>
+    <button mat-button (click)="cancelar()">Cancelar</button>
+    <!-- [mat-dialog-close]="respuestas" se cierra el modal y se envia el objeto que se emite al cerrarse cuando todo sale bien con afeterClosed -->
+    <button mat-button [mat-dialog-close]="respuestas">Enviar</button>
+</div>

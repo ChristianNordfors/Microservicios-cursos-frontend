@@ -1,0 +1,54 @@
+<div class="card bg-light mb-3 animate__animated animate__fadeIn">
+    <h4 class="card-header">{{titulo}}</h4>
+    <div class="card-body">
+        <div class="text-right">
+        <button class="btn btn-primary my-2" routerLink="/cursos/form">Crear curso</button>
+    </div>
+
+        <div class="alert alert-info" *ngIf="lista?.length==0">
+            No hay cursos en el sistema.
+        </div>
+
+        <table class="table table-hover table-striped table-bordered" *ngIf="lista?.length>0">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Nombre</th>
+                    <th>Exámenes</th>
+                    <th>Alumnos</th>
+                    <th>Fecha</th>
+                    <th>Opciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let curso of lista">
+                    <td>{{curso.id}}</td>
+                    <td>{{curso.nombre}}</td>
+                    <td>
+                        <button class="btn btn-info btn-sm" 
+                            [routerLink]="['/cursos/asignar-examenes', curso.id]">
+                            Añadir ({{curso.examenes.length}})
+                        </button>
+                    </td>
+                    <td>
+                        <button class="btn btn-secondary btn-sm" 
+                            [routerLink]="['/cursos/asignar-alumnos', curso.id]">
+                            Añadir ({{curso.alumnos.length}})
+                        </button>
+                    </td>
+                    <td>{{curso.createAt | date: 'dd/MM/yyyy'}}</td>
+                    <td>
+                        <button class="btn btn-success btn-sm mr-1" [routerLink]="['/cursos/form', curso.id]">Editar</button>
+                        <button (click)="eliminar(curso)" class="btn btn-danger btn-sm">Eliminar</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <mat-paginator [length]="totalRegistros" [pageSize]="totalPorPagina" [pageIndex]="paginaActual"
+            [pageSizeOptions]="pageSizeOptions" (page)="paginar($event)" showFirstLastButtons>
+        </mat-paginator>
+
+
+    </div>
+</div>
